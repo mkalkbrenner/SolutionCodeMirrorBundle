@@ -3,8 +3,10 @@
 namespace Solution\CodeMirrorBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CodeMirrorType extends AbstractType
@@ -17,6 +19,15 @@ class CodeMirrorType extends AbstractType
     public function __construct($defaultsParameters)
     {
         $this->parameters = $defaultsParameters;
+        if(!array_key_exists('theme', $this->parameters)){
+            $this->parameters['theme'] = 'elegant';
+        }
+        if(!array_key_exists('mode', $this->parameters)){
+            $this->parameters['mode'] = 'text/html';
+        }
+        if(!array_key_exists('ajax', $this->parameters)){
+            $this->parameters['ajax'] = false;
+        }
     }
 
     /**
@@ -27,16 +38,13 @@ class CodeMirrorType extends AbstractType
         $view->vars['parameters'] = array_merge($this->parameters, $options['parameters']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-       $resolver->setDefaults(
-           array(
-               'parameters' => $this->parameters
-           )
-       );
+        $resolver->setDefaults(
+            [
+                'parameters' => $this->parameters
+            ]
+        );
     }
 
     /**
@@ -44,13 +52,13 @@ class CodeMirrorType extends AbstractType
      */
     public function getParent()
     {
-        return 'textarea';
+        return TextareaType::class;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'code_mirror';
     }

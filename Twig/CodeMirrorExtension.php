@@ -10,7 +10,7 @@ use Assetic\Asset\FileAsset;
 class CodeMirrorExtension extends \Twig_Extension
 {
     /**
-     * @var AssetManager
+     * @var \Solution\CodeMirrorBundle\Asset\AssetManager
      */
     protected $assetManager;
 
