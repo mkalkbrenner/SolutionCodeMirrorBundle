@@ -30,7 +30,7 @@ class CodeMirrorType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolve $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
        $resolver->setDefaults(
            array(
