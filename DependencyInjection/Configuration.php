@@ -22,7 +22,6 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-              ->scalarNode('form_type')->defaultValue('Solution\CodeMirrorBundle\Form\Type\CodeMirrorType')->end()
               ->scalarNode('twig_extension')->defaultValue('Solution\CodeMirrorBundle\Twig\CodeMirrorExtension')->end()
               ->arrayNode('parameters')
                 ->prototype('scalar')->end()

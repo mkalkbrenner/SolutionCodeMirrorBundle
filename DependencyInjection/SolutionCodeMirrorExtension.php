@@ -22,7 +22,6 @@ class SolutionCodeMirrorExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('code_mirror.form_type', $config['form_type']);
         $container->setParameter('code_mirror.parameters', $config['parameters']);
         $container->setParameter('code_mirror.twig.extension', $config['twig_extension']);
         $container->setParameter('code_mirror.mode_dirs', $config['mode_dirs']);
