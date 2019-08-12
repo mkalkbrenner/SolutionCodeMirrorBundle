@@ -18,6 +18,15 @@ final class CodeMirrorType extends AbstractType
     public function __construct($defaultsParameters)
     {
         $this->parameters = $defaultsParameters;
+        if(!array_key_exists('theme', $this->parameters)){
+            $this->parameters['theme'] = 'elegant';
+        }
+        if(!array_key_exists('mode', $this->parameters)){
+            $this->parameters['mode'] = 'text/html';
+        }
+        if(!array_key_exists('ajax', $this->parameters)){
+            $this->parameters['ajax'] = false;
+        }
     }
 
     /**
@@ -33,9 +42,11 @@ final class CodeMirrorType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'parameters' => $this->parameters
-        ]);
+        $resolver->setDefaults(
+            [
+                'parameters' => $this->parameters
+            ]
+        );
     }
 
     /**

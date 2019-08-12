@@ -12,15 +12,16 @@ Just add the following line to your projects composer.json require section, and 
 
 Enable bundle , add to `AppKernel.php`:
 ``` php
- new Solution\CodeMirrorBundle\SolutionCodeMirrorBundle()
+ new Solution\CodeMirrorBundle\SolutionCodeMirrorBundle(),
 ```
 ###Configuration
 Add default parameters to `config.yml`:
 ``` yaml
-twig:
-    form:
-        resources:
-            - 'SolutionCodeMirrorBundle:Form:code_mirror_widget.html.twig'
+framework:
+    templating:
+        form:
+            resources:
+                - 'SolutionCodeMirrorBundle:Form:code_mirror_widget.html.twig'
 
 assetic:
     bundles:
@@ -34,9 +35,11 @@ solution_code_mirror:
         lineWrapping: true
         theme: base16-dark
     mode_dirs:
-        - @SolutionCodeMirrorBundle/Resources/public/js/mode
+        - '@SolutionCodeMirrorBundle/Resources/public/js/mode'
     themes_dirs:
-        - @SolutionCodeMirrorBundle/Resources/public/css/theme
+        - '@SolutionCodeMirrorBundle/Resources/public/css/theme'
+    addons_dirs:
+            - '@SolutionCodeMirrorBundle/Resources/public/js/addon'
 ```
 
 

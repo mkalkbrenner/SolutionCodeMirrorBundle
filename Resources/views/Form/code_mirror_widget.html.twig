@@ -10,19 +10,97 @@
         {% endif %}
         {% for mode_path in code_mirror_get_js_mode(parameters) %}
             <script src="{{ asset(mode_path) }}" type="text/javascript"></script>
-        {% endfor %}
+        {% endfor %#}
 
         {% if code_mirror_get_css_theme(parameters) %}
             {% set theme = code_mirror_get_css_theme(parameters) %}
 
-            <link type="text/css" rel="stylesheet" media="all" href="/bundles/solutioncodemirror/css/theme/{{ parameters['theme'] }}.css" />
+            <link type="text/css" rel="stylesheet" media="all"
+                  href="/bundles/solutioncodemirror/css/theme/{{ parameters['theme'] }}.css"/>
             {% stylesheets '@SolutionCodeMirrorBundle/Resources/public/css/codemirror.css' %}
-            <link type="text/css" rel="stylesheet" media="all" href="{{ asset_url }}" />
+            <link type="text/css" rel="stylesheet" media="all" href="{{ asset_url }}"/>
             {% endstylesheets %}
         {% endif %}
 
-        <script>
-            var code_mirror_{{ id }} = CodeMirror.fromTextArea(document.getElementById("{{ id }}"), {{ code_mirror_parameters_render(parameters)|raw }});
-        </script>
+        {% if parameters['ajax'] %}
+            {% if code_mirror_is_first_call() %}
+                {% javascripts '@SolutionCodeMirrorBundle/Resources/public/js/codemirror.js' %}
+                <script type="text/javascript">
+                    var code_mirror = [];
+                    $.when(
+                        $.getScript('{{ asset_url }}'),
+                            {% for mode_path in code_mirror_get_js_mode(parameters) %}
+                        $.getScript('{{ asset(mode_path) }}'),
+                            {% endfor %}
+                        $.Deferred(function (deferred) {
+                            $(deferred.resolve);
+                        })
+                    ).done(function () {
+
+                        code_mirror['{{ id }}'] = CodeMirror.fromTextArea(document.getElementById("{{ id }}"), {{ code_mirror_parameters_render(parameters)|raw }});
+                    });
+
+                </script>
+                {% endjavascripts %}
+            {% endif %}
+            <script>
+                //var code_mirror_{{ id }} = CodeMirror.fromTextArea(document.getElementById("{{ id }}"), {{ code_mirror_parameters_render(parameters)|raw }});
+            </script>
+        {% else %}
+            {% if code_mirror_is_first_call() %}
+                {% javascripts  filter="?jsqueeze" output="js/cm.js"
+                '@SolutionCodeMirrorBundle/Resources/public/js/codemirror.js' %}
+                <script type="text/javascript" src="{{ asset_url }}"></script>
+                {% endjavascripts %}
+            {% endif %}
+            {% for mode_path in code_mirror_get_js_mode(parameters) %}
+                <script src="{{ asset(mode_path) }}" type="text/javascript"></script>
+            {% endfor %}
+            <script>
+                var code_mirror = [];
+                code_mirror['{{ id }}'] = CodeMirror.fromTextArea(document.getElementById("{{ id }}"), {{ code_mirror_parameters_render(parameters)|raw }});
+            </script>
+        {% endif %}
+
+
+        {% if parameters['filename'] is defined %}
+            {% javascripts filter="?jsqueeze" output="js/cm_addons.js"
+            '@SolutionCodeMirrorBundle/Resources/public/js/addon/mode/loadmode.js'
+            '@SolutionCodeMirrorBundle/Resources/public/js/mode/meta.js' %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+            <script type="text/javascript">
+                CodeMirror.modeURL = '/bundles/solutioncodemirror/js/mode/%N/%N.js';
+                var modeInput = document.getElementById("{{ parameters['filename'] }}");
+                CodeMirror.on(modeInput, "change", function (e) {
+                    cmModeChange();
+                });
+                function cmModeChange() {
+                    var val = modeInput.value, m, mode, spec;
+                    if (m = /.+\.([^.]+)$/.exec(val)) {
+                        var info = CodeMirror.findModeByExtension(m[1]);
+                        if (info) {
+                            mode = info.mode;
+                            spec = info.mime;
+                        }
+                    } else if (/\//.test(val)) {
+                        var info = CodeMirror.findModeByMIME(val);
+                        if (info) {
+                            mode = info.mode;
+                            spec = val;
+                        }
+                    } else {
+                        mode = spec = val;
+                    }
+                    if (mode) {
+                        code_mirror['{{ id }}'].setOption("mode", spec);
+                        CodeMirror.autoLoadMode(code_mirror['{{ id }}'], mode);
+                    } else {
+                        console.log("Could not find a mode corresponding to " + val);
+                    }
+                }
+            </script>
+            {% endjavascripts %}
+        {% endif %}
+
     {% endspaceless %}
 {% endblock %}
