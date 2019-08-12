@@ -3,11 +3,12 @@
 namespace Solution\CodeMirrorBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CodeMirrorType extends AbstractType
+final class CodeMirrorType extends AbstractType
 {
     /**
      * @var array
@@ -32,11 +33,9 @@ class CodeMirrorType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-       $resolver->setDefaults(
-           array(
-               'parameters' => $this->parameters
-           )
-       );
+        $resolver->setDefaults([
+            'parameters' => $this->parameters
+        ]);
     }
 
     /**
@@ -44,15 +43,15 @@ class CodeMirrorType extends AbstractType
      */
     public function getParent()
     {
-        return method_exists('Symfony\Component\Form\AbstractType', 'getBlockPrefix')
-        ? 'Symfony\Component\Form\Extension\Core\Type\TextareaType'
-        : 'textarea';
+        return TextareaType::class;
     }
 
     /**
-     * {@inheritdoc}
+     * Keep this to use same widget.
+     *
+     * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'code_mirror';
     }

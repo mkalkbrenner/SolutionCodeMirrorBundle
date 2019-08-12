@@ -1,6 +1,6 @@
 {
     "name": "nitrado/code-mirror-bundle",
-    "description": "This Bundle integrates CodeMirror editor into a Symfony2 project.",
+    "description": "This Bundle integrates CodeMirror editor into a Symfony project.",
     "keywords": ["codemirror", "php editor", "html editor", "editor"],
     "type": "symfony-bundle",
     "license": "MIT",
@@ -14,13 +14,16 @@
             "name": "Aaron Mueller",
             "homepage": "http://marbis.net/",
             "email": "aaron.mueller@marbis.net"
+        },
+        {
+            "name": "llupa"
         }
     ],
     "require": {
-        "php": ">=5.3.2",
-        "symfony/symfony": "~2.3|~3.0",
+        "php": ">=7.1",
+        "symfony/symfony": "~3.4",
         "twig/twig": "*",
-        "symfony/assetic-bundle": "*",
+        "symfony/webpack-encore-bundle": "*",
         "zendframework/zend-json": "2.0.*"
     },
     "minimum-stability": "dev",
